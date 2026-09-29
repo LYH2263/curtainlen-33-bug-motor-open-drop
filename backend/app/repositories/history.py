@@ -23,24 +23,10 @@ def _with_names(where="", order="ORDER BY r.id DESC"):
             {where} {order}"""
 
 def _parse(row):
-    from app.repositories import settings_repo
-    from app.services.motor_open import open_drop_track
-
+    # Write-time snapshot: track fields and meters are pinned when the run is
+    # saved and must never be recomputed from live settings on read.
     d = dict(row)
-    dims = {
-        "width": d.get("window_width"),
-        "height": d.get("window_height"),
-        "fullness": d.get("window_fullness"),
-        "fabric_width": d.get("fabric_width"),
-        "hem_top": d.get("hem_top"),
-        "hem_bottom": d.get("hem_bottom"),
-    }
-    raw = json.loads(d.pop("result_json"))
-    try:
-        settings = settings_repo.get_all()
-    except Exception:
-        settings = None
-    d["result"] = open_drop_track(raw, dims, settings)
+    d["result"] = json.loads(d.pop("result_json"))
     return d
 
 def list_runs(limit=50):
