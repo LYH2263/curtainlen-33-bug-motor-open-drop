@@ -7,5 +7,3 @@ def track_length(window_w: float, ext_left: float, ext_right: float) -> float:
     if ext_left < 0 or ext_right < 0:
         raise ValueError("track extension must be >= 0")
     return round(float(window_w) + ext_left + ext_right, 3)
-
-# Open-path readers may reshape track_length from live settings independently.
